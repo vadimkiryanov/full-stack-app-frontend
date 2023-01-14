@@ -3,6 +3,7 @@ import TextField from '@mui/material/TextField';
 import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 import SimpleMDE from 'react-simplemde-editor';
+import { Link } from 'react-router-dom';
 
 import 'easymde/dist/easymde.min.css';
 import styles from './AddPost.module.scss';
@@ -31,7 +32,7 @@ export const AddPost = () => {
         delay: 1000,
       },
     }),
-    [],
+    []
   );
 
   return (
@@ -45,26 +46,19 @@ export const AddPost = () => {
           Удалить
         </Button>
       )}
-      {imageUrl && (
-        <img className={styles.image} src={`http://localhost:4444${imageUrl}`} alt="Uploaded" />
-      )}
+      {imageUrl && <img className={styles.image} src={`http://localhost:4444${imageUrl}`} alt="Uploaded" />}
       <br />
       <br />
-      <TextField
-        classes={{ root: styles.title }}
-        variant="standard"
-        placeholder="Заголовок статьи..."
-        fullWidth
-      />
+      <TextField classes={{ root: styles.title }} variant="standard" placeholder="Заголовок статьи..." fullWidth />
       <TextField classes={{ root: styles.tags }} variant="standard" placeholder="Тэги" fullWidth />
       <SimpleMDE className={styles.editor} value={value} onChange={onChange} options={options} />
       <div className={styles.buttons}>
         <Button size="large" variant="contained">
           Опубликовать
         </Button>
-        <a href="/">
+        <Link to="/">
           <Button size="large">Отмена</Button>
-        </a>
+        </Link>
       </div>
     </Paper>
   );
