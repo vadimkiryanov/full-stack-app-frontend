@@ -7,22 +7,23 @@ import { Post } from '../components/Post';
 import { TagsBlock } from '../components/TagsBlock';
 import { CommentsBlock } from '../components/CommentsBlock';
 
-import axios from '../axios'; // Важно импортировать не библиотеку
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchPosts } from '../redux/slices/posts';
+import { fetchPosts, fetchTags } from '../redux/slices/posts';
 
 export const Home = () => {
   const dispatch = useDispatch();
   const { posts, tags } = useSelector((state) => state.postsReducer);
 
   const isPostsLoading = posts.status === 'loading';
+  const isTagsLoading = posts.status === 'loading';
+  const isPostsError = posts.status === 'error';
 
   console.log(posts);
 
-  // Запрос на БЭК
+  // Запрос на БЭК (Актуально, чтобы запрос шел из Home для акутальной информации)
   React.useEffect(() => {
-    // axios.get('/posts');
     dispatch(fetchPosts());
+    dispatch(fetchTags());
   }, [dispatch]);
 
   return (
@@ -38,7 +39,7 @@ export const Home = () => {
               <Post key={idPost} isLoading={true} />
             ) : (
               <Post
-                id={itemPost._id}
+                _id={itemPost._id}
                 title={itemPost.title}
                 imageUrl={itemPost.imageUrl}
                 user={itemPost.user}
@@ -51,10 +52,11 @@ export const Home = () => {
               />
             )
           )}
+          {isPostsError && <h2>Произошла непредвиденная ошибка</h2>}
         </Grid>
 
         <Grid xs={4} item>
-          <TagsBlock items={['react', 'typescript', 'заметки']} isLoading={false} />
+          <TagsBlock items={tags.items} isLoading={isTagsLoading} />
           <CommentsBlock
             items={[
               {
