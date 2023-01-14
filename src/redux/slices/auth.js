@@ -8,6 +8,21 @@ export const fetchAuth = createAsyncThunk('auth/fetchAuth', async (params) => {
   return data;
 });
 
+// Register
+export const fetchRegister = createAsyncThunk('auth/fetchRegister', async (params) => {
+  const { data } = await axios.post('/auth/register', params);
+
+  return data;
+});
+
+// authMe
+export const fetchAuthMe = createAsyncThunk('auth/fetchAuthMe', async (params) => {
+  // get запрос без параметров, так axios автоматически будет вытаскивать из localStorage token
+  const { data } = await axios.get('/auth/me');
+
+  return data;
+});
+
 const initialState = {
   data: null,
   status: 'loading',
@@ -19,7 +34,6 @@ const authSlice = createSlice({
   reducers: {
     toLogout: (state, action) => {
       state.data = null;
-      console.log('Hello');
     },
   },
   extraReducers: {
@@ -33,6 +47,34 @@ const authSlice = createSlice({
       state.status = 'loaded';
     },
     [fetchAuth.rejected]: (state) => {
+      state.data = null;
+      state.status = 'error';
+    },
+
+    // me
+    [fetchAuthMe.pending]: (state) => {
+      state.data = null;
+      state.status = 'loading';
+    },
+    [fetchAuthMe.fulfilled]: (state, action) => {
+      state.data = action.payload;
+      state.status = 'loaded';
+    },
+    [fetchAuthMe.rejected]: (state) => {
+      state.data = null;
+      state.status = 'error';
+    },
+
+    // Register
+    [fetchRegister.pending]: (state) => {
+      state.data = null;
+      state.status = 'loading';
+    },
+    [fetchRegister.fulfilled]: (state, action) => {
+      state.data = action.payload;
+      state.status = 'loaded';
+    },
+    [fetchRegister.rejected]: (state) => {
       state.data = null;
       state.status = 'error';
     },

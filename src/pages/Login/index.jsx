@@ -38,11 +38,31 @@ export const Login = () => {
   });
 
   // Выполняется, если вся валидация прошла успешно
-  const onSubmitForm = (values) => {
-    console.log(values);
-    dispatch(fetchAuth(values)); // Отправка формы на сервер входа
+  const onSubmitForm = async (values) => {
+    // Отправка формы на сервер входа и сохранение в data
+    const data = await dispatch(fetchAuth(values));
+
+    // Альтернативный способ отлова ошибок
+    // if (!data.payload) {
+    //   alert('Не удалось авторизоваться');
+    // }
+
+    // Отлов ошибок, если не получилось авторизоваться
+    try {
+      if ('token' in data.payload) {
+        window.localStorage.setItem('token', data.payload.token);
+      }
+    } catch (error) {
+      alert('Не удалось авторизоваться');
+      console.error('Произошла ошибка:', error);
+    }
+
+    // Если поле token есть в data.payload, то грузим токен в localStorage
+
+    console.log(data);
   };
 
+  // Если пользователь авторизовался, то его редиректят на главную стр
   if (isAuth) {
     return <Navigate to="/" />;
   }
@@ -76,7 +96,8 @@ export const Login = () => {
           {...register('password', { required: 'Укажите пароль' })}
           fullWidth
         />
-        <Button type="submit" size="large" variant="contained" fullWidth>
+
+        <Button disabled={!isValid} type="submit" size="large" variant="contained" fullWidth>
           Войти
         </Button>
       </form>
