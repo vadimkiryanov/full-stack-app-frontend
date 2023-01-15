@@ -14,6 +14,11 @@ export const fetchTags = createAsyncThunk('posts/fetchTags', async () => {
   return data;
 });
 
+// Удаление постов
+export const fetchRemovePost = createAsyncThunk('posts/fetchRemovePost', async (_id) => {
+  await axios.delete(`/posts/${_id}`);
+});
+
 const initialState = {
   posts: {
     items: [],
@@ -56,6 +61,12 @@ const postsSlice = createSlice({
     [fetchTags.rejected]: (state) => {
       state.tags.items = [];
       state.tags.status = 'error';
+    },
+
+    // Удаление постов
+    [fetchRemovePost.pending]: (state, action) => {
+      // Отфильтровываем массив, чтобы он не оставил у себя все элементы, кроме того, который мы ему передаем (удаляем)
+      state.posts.items = state.posts.items.filter((obj) => obj._id !== action.meta.arg);
     },
   },
 });
