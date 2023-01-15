@@ -12,8 +12,12 @@ import { fetchPosts, fetchTags } from '../redux/slices/posts';
 
 export const Home = () => {
   const dispatch = useDispatch();
+  // Получение постов
   const { posts, tags } = useSelector((state) => state.postsReducer);
+  // Получение данных о авторизованном пользователе
+  const { data: userData } = useSelector((state) => state.authReducer);
 
+  // Проверка загрузки и ошибок
   const isPostsLoading = posts.status === 'loading';
   const isTagsLoading = posts.status === 'loading';
   const isPostsError = posts.status === 'error';
@@ -22,8 +26,8 @@ export const Home = () => {
 
   // Запрос на БЭК (Актуально, чтобы запрос шел из Home для акутальной информации)
   React.useEffect(() => {
-    dispatch(fetchPosts());
-    dispatch(fetchTags());
+    dispatch(fetchPosts()); // Посты
+    dispatch(fetchTags()); // Теги
   }, [dispatch]);
 
   return (
@@ -47,8 +51,9 @@ export const Home = () => {
                 viewsCount={itemPost.viewsCount}
                 commentsCount={3}
                 tags={itemPost.tags}
-                isEditable
                 isLoading={false}
+                // Проверка доступа к редактированию статей
+                isEditable={userData?._id === itemPost.user._id}
               />
             )
           )}

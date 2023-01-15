@@ -14,7 +14,7 @@ function App() {
   const isAuth = useSelector(selectIsAuth);
 
   React.useEffect(() => {
-    dispatch(fetchAuthMe());
+    dispatch(fetchAuthMe()); // Постоянная проверка наличия токена
   }, [dispatch]);
 
   return (

@@ -51,7 +51,7 @@ const authSlice = createSlice({
       state.status = 'error';
     },
 
-    // me
+    // Me
     [fetchAuthMe.pending]: (state) => {
       state.data = null;
       state.status = 'loading';
