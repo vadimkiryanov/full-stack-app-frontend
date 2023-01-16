@@ -131,13 +131,17 @@ export const AddPost = () => {
           alert('Произошла ошибка при получении статьи');
         });
     }
-    // }
+
+    // Возможность создавать статью
+    !isEditing && setLoading(false);
   }, [id, isEditing, navigate, statusUserData, userData?._id]);
 
   // Если пользователь НЕ авторизовался, то его редиректят на главную стр
   if (!window.localStorage.getItem('token') && !isAuth) {
     return <Navigate to="/" />;
   }
+
+  console.log({ isLoading });
 
   return (
     <>

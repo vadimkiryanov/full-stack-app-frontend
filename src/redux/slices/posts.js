@@ -10,7 +10,7 @@ export const fetchPosts = createAsyncThunk('posts/fetchPosts', async () => {
 // Запрос на сервер (тэги)
 export const fetchTags = createAsyncThunk('posts/fetchTags', async () => {
   const { data } = await axios.get('/tags');
-
+  console.log({ data });
   return data;
 });
 
